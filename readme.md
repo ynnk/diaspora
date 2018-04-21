@@ -25,16 +25,18 @@ https://framasphere.org/people/c9d0b570778801334c022a0000053625/stream.json
 
 ### Installation
 
-    $ make install
+    $ make install build
 
 ### Configuration
  
-##### Edit `conf.py`
+##### Edit `conf.json`
+    {
+    "pod" : "https://framasphere.org",
+    "username" :"you",
+    "password": "password",
+    "host" : "http://localhost:5009"
+    }
     
-        __pod__ ='https://some.diaspora.pod'
-        __username__ ='yourimaginaryname'
-        __password__ ='onepassword'
-        
 ### Run
 
         # start flask dev server
