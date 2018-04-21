@@ -132,7 +132,7 @@ ME = diasp.me()
 @app.route('/readme', methods=['GET', 'POST'])
 def home():
     md = codecs.open('readme.md', 'r', encoding='utf8').read()
-    return render_template('home.html', readme=md )
+    return render_template('home.html', readme=md , me=ME, pod=__pod__)
 
 @app.route("/robots.txt") 
 def robots():
