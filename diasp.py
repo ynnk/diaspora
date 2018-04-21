@@ -100,7 +100,7 @@ class Diasp(object):
         return stream
 
     def fetch_tag(self, tag):
-        c = login()
+        c = self.login()
         stream = diaspy.streams.Tag(c, tag.lower())
         #stream.more()
         merge = json.loads(stream.json())
