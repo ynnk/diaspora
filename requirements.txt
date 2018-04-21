@@ -10,7 +10,7 @@ bs4
 requests
 python-dateutil
 
-https://github.com/marekjm/diaspy
+https://github.com/marekjm/diaspy/archive/master.zip    
 
 # cello reliure Botagraph & BotaIgraph
 reliure
