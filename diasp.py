@@ -24,14 +24,13 @@ class Diasp(object):
         self.__host__ = host
 
     def connection(self):
-        c = diaspy.connection.Connection( pod = self.__pod__, username = self.__username__, password = self.__password__)
-        return c
+        self._connection = diaspy.connection.Connection( pod = self.__pod__, username = self.__username__, password = self.__password__)
+        return self._connection
         
     def login(self):
         if self._connection is None:
-            c = self.connection()
-            c.login()
-            self._connection = c
+            self.connection()
+            self._connection.login()
         return self._connection
 
     def me(self):

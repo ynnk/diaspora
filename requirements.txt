@@ -14,7 +14,8 @@ python-igraph
 numpy
 scipy
 
-https://github.com/marekjm/diaspy/archive/master.zip    
+#https://github.com/marekjm/diaspy/archive/master.zip    
+https://github.com/ynnk/diaspy/archive/master.zip    
 
 # cello reliure Botagraph & BotaIgraph
 reliure
