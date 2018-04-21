@@ -14,7 +14,8 @@ install:
 	node -v
 	@echo " ------------------------------\n"
 
-	pip install -r requirements.txt
+	virtualenv diasp3
+	diasp3/bin/pip install -r requirements.txt
 
 
 jade:
@@ -25,14 +26,7 @@ jade:
 
 	cd ./templates && node ../node_modules/jade/bin/jade.js -P *.jade
 
-statics :
-	@echo "\n ---------------------------"
-	@echo " * Building statics"
-	@echo " ---------------------------\n"
+build : jade
 
-
-
-build : jade statics
-
-run : build
+run : 
 	export APP_DEBUG=true; python app.py  --port 5009

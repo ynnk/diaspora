@@ -1,0 +1,58 @@
+
+
+style.
+  #appmenu a.item {
+    margin-bottom: 6px !important;
+  }
+  #appmenu .stream .button {
+    background: #4b6162;
+    color: #ffffff;
+  }
+  #appmenu  .stream .label {
+    margin-bottom: -3px !important;
+    margin-right: 6px !important;
+    background: #6e94af;
+    color: #ffffff;
+  }
+  #appmenu  .item.me a .image { width: 38px; }
+  #appmenu  .item.me a {
+    padding: 0px;
+    padding-left: 3px;
+  }
+
+.ui.secondary.pointing.menu
+
+    .item
+        a.ui.primary.button(href='/fetch') fetch
+
+    .ui.simple.dropdown.item
+      i.large.dropdown.icon
+      .menu  
+        a.item(href='/stream.json') stream.json
+        a.item(href='/stream.csv') stream.csv
+        a.item(href='/raw.json') raw.json
+        a.item(href='/robots.txt') robots.txt
+
+    .stream.item
+      .ui.labeled.button
+        a.ui.button(href='/stream') stream
+        .ui.basic.label {{stream_count}}
+
+    .stream.item
+      .ui.labeled.button
+        a.ui.button(href='/tags') tags
+        .ui.basic.label {{tags_count}}
+
+    .stream.item
+      .ui.labeled.button
+        a.ui.button(href='/people') people
+        .ui.basic.label {{people_count}}
+
+    .stream.item
+        a.ui.button(href='/graph') graph
+
+    .right.floated.item.me
+      .ui.labeled.button
+        a.ui.lightgrey.button(href='/people/{{me.guid}}')
+            img.ui.mini.image(src="{{pod + me.avatar.small}}")
+        .ui.basic.label

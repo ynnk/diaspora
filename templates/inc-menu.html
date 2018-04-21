@@ -1,0 +1,49 @@
+
+<style>
+  #appmenu a.item {
+    margin-bottom: 6px !important;
+  }
+  #appmenu .stream .button {
+    background: #4b6162;
+    color: #ffffff;
+  }
+  #appmenu  .stream .label {
+    margin-bottom: -3px !important;
+    margin-right: 6px !important;
+    background: #6e94af;
+    color: #ffffff;
+  }
+  #appmenu  .item.me a .image { width: 38px; }
+  #appmenu  .item.me a {
+    padding: 0px;
+    padding-left: 3px;
+  }
+  
+</style>
+<div class="ui secondary pointing menu">
+  <div class="item"><a href="/fetch" class="ui primary button">fetch</a></div>
+  <div class="ui simple dropdown item"><i class="large dropdown icon"></i>
+    <div class="menu"> <a href="/stream.json" class="item">stream.json</a><a href="/stream.csv" class="item">stream.csv</a><a href="/raw.json" class="item">raw.json</a><a href="/robots.txt" class="item">robots.txt</a></div>
+  </div>
+  <div class="stream item">
+    <div class="ui labeled button"><a href="/stream" class="ui button">stream</a>
+      <div class="ui basic label">{{stream_count}}</div>
+    </div>
+  </div>
+  <div class="stream item">
+    <div class="ui labeled button"><a href="/tags" class="ui button">tags</a>
+      <div class="ui basic label">{{tags_count}}</div>
+    </div>
+  </div>
+  <div class="stream item">
+    <div class="ui labeled button"><a href="/people" class="ui button">people</a>
+      <div class="ui basic label">{{people_count}}</div>
+    </div>
+  </div>
+  <div class="stream item"><a href="/graph" class="ui button">graph</a></div>
+  <div class="right floated item me">
+    <div class="ui labeled button"><a href="/people/{{me.guid}}" class="ui lightgrey button"><img src="{{pod + me.avatar.small}}" class="ui mini image"/></a>
+      <div class="ui basic label"></div>
+    </div>
+  </div>
+</div>

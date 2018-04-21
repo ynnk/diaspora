@@ -1,0 +1,457 @@
+style.
+
+    #keb {
+        min-width:350px;
+    }
+
+    #keb .close{
+        background: #FFF;
+        text-align:right;
+        padding: 4px ;
+    }
+
+    .pusher .segment {
+        padding: 0px ;
+    }
+    
+    a.ui.active.refresh.button {    }
+    
+  
+    
+    .footer.segment {
+      padding: 5em 0em;
+    }
+
+    @media only screen and (max-width: 700px) {
+      .ui.fixed.menu {
+        display: none !important;
+      }
+      .secondary.pointing.menu .item,
+      .secondary.pointing.menu .menu {
+        display: none;
+      }
+      .secondary.pointing.menu .toc.item {
+        display: block;
+      }
+    }
+
+    a.inverted { color:white;}
+
+    pre {
+        background: darkcyan;
+        padding: 6px;
+        margin: 0px 30px 10px 0px;
+    }
+
+    code.log {
+        background: none;
+        white-space:pre-wrap;
+    }
+
+    form .ui.checkbox label {
+        font-size: 24px;
+        padding-left: 24px;
+        color: white;
+    }
+
+    form h3 {
+        margin-top: 2px
+    }
+
+    input[type=radio] {
+        margin:20px;
+    }
+
+    #importform.ui.form .field label {
+        color:white !important;
+    }
+
+    input[type=checkbox], input[type=radio]
+    {
+      /* Double-sized Checkboxes */
+      -ms-transform: scale(2); /* IE */
+      -moz-transform: scale(2); /* FF */
+      -webkit-transform: scale(2); /* Safari and Chrome */
+      -o-transform: scale(2); /* Opera */
+      padding: 10px;
+    }
+
+
+    span.bold { font-weight: bold }
+
+    .column.vz { height: 50% !important }
+    a.multi {            
+        position: absolute !important;
+        margin  : 12px;
+    }
+
+    #menu {
+      position:absolute;
+      background: {{color}};
+    }
+
+    #menu .divider { margin:3px }
+
+    .ui.icon.menu {
+      margin: 12px;
+      text-align: right;
+      top: 92px;
+    }
+
+    #gviz {
+        margin:auto;        
+        text-align:left;
+        width:100%;
+        height:calc(100% - 40px );
+    }
+
+    #cardmenu {
+        position: absolute;
+        top: 100px;
+        right: 15px;
+        min-height: 25px;
+        background: white;
+        border-radius: 4px;
+    }
+    
+    #cardmenu .item {
+        line-height: 0.1;
+        padding: 12px;
+    }
+
+    #cardmenu a.active {
+        background: #FAFAFA;
+    }
+    
+    #cardmenu i.icon {
+        height:0px;
+        padding-right: 4px;
+    }
+
+    padagraph-collection {
+        position: absolute;
+        top: 37px;
+        right: 12px;
+        width: 360px;
+        background-color: #FEFEFE;
+        height: calc(100% - 92px);
+
+    }
+
+    padagraph-node-search {
+    }
+
+    #viz {
+        height: 100%;
+        width: 100%;
+    }
+
+    #labels {
+      position:absolute;
+      bottom: 12px;
+      padding:0px;
+      margin-left:18px;
+      width:100%;
+    }
+    
+    #labels .segment {
+      margin-left: -14px;
+      margin-bottom: 24px;
+      position:absolute;
+      bottom: 32px;
+    }
+
+    padagraph-model-popup[hidden] {
+        display:none;
+    }
+    padagraph-model-popup {
+        display:block;
+        position:absolute;
+        width: 360px;
+        top: 21px;
+        right:0px;
+        margin: 12px;
+        overflow-y: auto;
+        z-index: 10;
+        height: calc(100% - 36px);
+    }
+   
+    padagraph-model-popup .propvalue {  color: #333; }
+
+script( src="{{static_host}}/static/webcomponents-lite.js" )
+script( data-main="{{static_host}}/static/main" src="{{static_host}}/static/require.js")
+link( rel="import" href="{{static_host}}/static/padagraph-gviz-min.html")
+
+
+dom-module(id='graph-app')
+  template
+  
+     padagraph-gviz-json( sync="{{sync}}" routes="{{routes}}" data="{{data}}" )
+      padagraph-gviz( options="{{options}}")
+        div#viz()
+
+        // liste and card details 
+        .ui.compact.menu#cardmenu
+            a.link.item#listbutton( on-click="togglelist" )
+                i.list.alternate.outline.icon
+                | list
+            a.link.item.active#cardbutton( on-click="togglecard" )
+                i.id.card.outline.icon
+                | details
+
+        padagraph-model-popup( id="gvizpopup" hidden$="{{'\{{is_hidden(display_card)}\}'}}" )
+        
+        padagraph-collection(mode="node" hidden$="{{'\{{is_hidden(display_list)}\}'}}" )
+
+       
+        .ui.icon.borderless.vertical.menu#menu
+              padagraph-collection-filter( mode="node" asitem="asitem")
+              padagraph-collection-filter( mode="edge" asitem="asitem")
+
+              .ui.divider          
+              padagraph-engine-control( engine="layout" asitem="asitem")
+              //padagraph-engine-control( engine="clustering" asitem="asitem")
+              //padagraph-engine-control( engine="explore" asitem="asitem")
+          
+              .ui.divider
+              a.ui.item#keb_settings
+                i.settings.icon
+                        
+
+        .ui.grid#labels
+         .six.wide.column
+
+          padagraph-labels-control
+         .six.wide.column
+          padagraph-node-search(actions="add,explore")
+          {% if graphurl %}   
+          a.ui.tiny.active.refresh.button( href="{{graphurl}}") refresh
+          {% endif %}
+         .four.wide.column
+            #loading
+              p Loading...
+              
+  script.
+    require(['backbone', 'cello', 'gviz', 'materials', 'pdgconst'], function (Backbone, Cello, Gviz, Materials, Const ) {
+     Polymer({
+      is: "graph-app",
+
+      properties : {
+        display_card : Boolean,
+        display_list : Boolean,
+      },
+      
+      togglecard(){
+          
+        var element = document.getElementById("cardbutton");
+        element.classList.toggle("active");
+        
+        var card = document.getElementById("listbutton")
+        if ( element.classList.contains("active") && card.classList.contains("active") )
+            card.classList.remove("active")
+
+        this.toggle();
+      },
+      
+      togglelist(){
+        var e ="listbutton"
+        var element = document.getElementById(e);
+        element.classList.toggle("active");
+
+        var card = document.getElementById("cardbutton")
+        if ( element.classList.contains("active") && card.classList.contains("active") )
+            card.classList.remove("active") 
+
+        this.toggle();
+      },
+      
+      toggle(){
+        this.display_card = document.getElementById("cardbutton").classList.contains("active");
+        this.display_list = document.getElementById("listbutton").classList.contains("active");
+      },
+
+      is_hidden(e) { return !e },
+
+      
+      ready() {
+        this.toggle();
+        document.querySelector('padagraph-model-popup').hidden = true;
+        
+        var _window_resized = function(){
+            var e = document.getElementById('gviz');
+            e.style.height = ( window.innerHeight - 84 )+ "px";
+            //e.style.height = ( window.innerHeight )+ "px";
+            var app = document.querySelector('padagraph-gviz').app
+            if ( app.gviz ) app.gviz.resize_rendering();
+        }
+        
+        window.onresize = _window_resized;
+
+        var loading = function(e, name, engine, show){
+            console.log("loading",e,  name, engine, show)
+            var element = document.getElementById("loading");
+            if ( show && !element.classList.contains("show") )
+                element.classList.toggle("show");
+            if ( !show && element.classList.contains("show") )
+                element.classList.toggle("show");
+        };      
+        
+       
+        window.onresize = _window_resized;
+
+        document.querySelector('padagraph-gviz-json').addEventListener('engines-complete', function (e) {
+
+            console.log(e.detail.app); // true
+            var app = e.detail.app;
+
+            /* engines */
+            var engines = [];
+            var app_engines = {
+                // commons
+                'search': { description : "Requête articles vers l'api ISTEX", },
+                'graph' : { description : "Exploration du graphe global contruit à partir des résultats.",
+                            components : {
+                              "Graph" : "Construction du graph local" ,
+                              "ResetGraph" : "Suppression de tous les articles du graphe global."  
+                            }
+                          },
+                'labels': { description : "Labellisation des clusters", },
+                'import': { description : "Importer un graph.", },
+                'export': { description : "Sauvegarder et partager un graph.", },
+                //'expand':app.engines.expand_prox,
+            };
+            for (var k in app_engines){
+                app_engines[k].engine = app.engines[k];
+            }
+
+
+            (function(){
+                var engine =  app.engines.search;
+                var additiveNodeQuery = new app.Models.AdditiveNodesQuery({graph: app.models.graph })
+                engine.register_input("request", additiveNodeQuery);
+                app.listenTo( Backbone,"engine:search", function(params){                            
+                    engine.play();
+                });
+                var merge = function(response, kwargs, state){
+                    options = { reset: state.search[0].options.reset };
+                    app.merge_graph(response, options);
+                };
+                app.listenTo(engine, 'play:success', merge );
+            })();
+                
+            (function(){
+                var engine =  app.engines.graph;
+                var additiveNodeQuery = new app.Models.AdditiveNodesQuery({graph: app.models.graph })
+                engine.register_input("request", additiveNodeQuery);
+                var merge = function(response, kwargs, state){
+                    options = { reset: state.graph[0].options ? state.graph[0].options.reset : true };
+                    app.merge_graph(response, options);
+                };
+                app.listenTo( Backbone,"engine:explore", function(params){                            
+                    var block = engine.blocks.at(0);
+                    var comp = block.components.at(0);
+                    block.select(comp);
+                    comp.set_option('reset', true);
+
+                    Backbone.trigger("unselect_nodes");
+                    Backbone.trigger("unselect_edges");
+
+                    engine.play();
+                });
+                app.listenTo(engine, 'play:success', merge );
+            })();
+            
+            (function(){
+                var engine =  app.engines.labels;
+                var cluster_query = new app.Models.ClustersLabelsQuery({ graph: app.models.graph, clustering : app.models.clustering })
+                engine.register_input("request", cluster_query);
+                app.listenTo( Backbone,"engine:labels", function(params){                            
+                    engine.play();
+                });
+                app.listenTo(engine, 'play:success', app.clusters_labels );
+            })();
+            
+            (function(){
+                var engine =  app.engines.export;
+                var additiveNodeQuery = new app.Models.AdditiveNodesQuery({graph: app.models.graph })
+                engine.register_input("request", additiveNodeQuery);
+                app.listenTo( Backbone,"engine:export", function(params){                            
+                    engine.play();
+                });
+                app.listenTo(engine, 'play:success', app.noop() );
+            })();
+            
+            (function(){
+                var engine = app.engines.import;
+                var additiveNodeQuery = new app.Models.AdditiveNodesQuery({graph: app.models.graph })
+                engine.register_input("request", additiveNodeQuery);
+                app.listenTo( Backbone,"engine:import", function(params){                            
+                    engine.play();
+                });
+                app.listenTo(engine, 'play:success', app.explore_reset);
+            })();
+            
+            for (var k in app_engines){
+                var engine = app_engines[k].engine
+                engine.name = k;
+                engine.description = app_engines[k].description ;
+                if (app_engines[k].components){
+                    engine.blocks.at(0).components.forEach(function(e){
+                        e.description = app_engines[k].components[e.name];
+                    });
+                }
+               
+                engines.push(engine);
+            }
+
+            // loading 
+            for ( var k in app.engines ){
+                app.listenTo(app.engines[k], 'play:loading',  function(e){ loading(e, k, engine, true )}  );
+                app.listenTo(app.engines[k], 'play:complete', function(e){ loading(e, k, engine, false)}  );
+            }
+
+            // keb
+            var keb = document.createElement("padagraph-keb")
+            keb.engines = engines;
+            $("#keb")
+                .sidebar('setting', 'dimPage', false)
+                .sidebar('setting', 'transition', 'overlay')
+            $("#kebcontent").append(keb)
+
+            $("#keb .close i.close.icon").click( ()=>{ $("#keb").sidebar('hide') } )
+            $("#keb_settings").click( ()=>{ $("#keb").sidebar('show') } )
+
+            // search toolbar callback
+            document.querySelector('padagraph-node-search').addEventListener('complete:valid', function (e) {
+              var comp = app.engines.search.blocks.at(0).get_component('IstexSearch')
+              comp.set_option("q", e.detail.value )
+              comp.set_option("field", "*" )
+              app.engines.search.play()
+            })
+
+            
+            _window_resized();
+        })
+
+      }
+     })
+    });
+
+
+
+#keb.ui.left.vertical.sidebar( style="background:#FAFAFA" )
+  a(name="kebup")
+  .close
+    a.ui.link.icon
+      i.close.icon
+  #kebcontent
+    padagraph-gviz-control
+  
+  .close
+    a.ui.link.icon(href="#kebup")
+      i.caret.up.icon
+
+div#gviz(class="{{ 'nofoot' if not footer else '' }}")
+
+    graph-app
+

@@ -1,0 +1,213 @@
+doctype html
+html
+ head
+    // Standard Meta
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0')
+    // Site Properties
+    link(rel='stylesheet', href='/static/semantic.min.css')
+
+    //link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css')
+    style(type='text/css').
+
+    title diasps
+
+    style.
+        
+      body {
+        background-color: #262f2f;
+        color: #EEE;
+        max-width: 800px;
+        margin:auto 
+      }
+      
+      body.pushable {
+          max-width: 100%;
+      }
+      body.pushable>.pusher{
+        background-color: #262f2f;
+      }
+    
+      .ui.card {
+        //background-color: #4b6363;
+        background-color: #404f50;
+        margin-top: 20px;
+        padding: 10px;
+        border-bottom: 1px solid #293838;
+        box-shadow: none;
+        width:100%;
+      }
+      .ui.card .content img {
+          max-width: 100%;
+      }
+      h3 a {
+        color: #c2c7c7;
+      }
+      .stream h3.next  {
+        color: #c2c7c7;
+      }
+      .stream h3.next a {
+        color: #c2c7c7;
+      }
+      .stream h3.next span {
+        color: #b2b7b7;
+        margin-left: 12px;
+      }
+      .text a {
+        color: #1b2323;
+      }
+      a {
+        color: #1b2323;
+        font-weight: bold;
+      }
+      a:hover {
+        color: #1b2323;
+        //text-decoration: underline;
+      }
+      a.people {
+        color: #CCC;
+        margin: 2px;
+        padding: 2px;
+        display: inline-table;
+      }
+      a.tag {
+        margin: 2px;
+        padding: 2px;
+        display: inline-table;
+      }
+      a.tag:before { content:"#";}
+
+      .people.card .column h1 {
+        color: #CCC;
+        text-align: right;
+      }
+      
+ body
+
+   include inc-menu.html
+
+    
+   {% if user %}
+
+   .ui.people.card
+     .content
+       .ui.two.column.grid
+         .column
+           .header
+             a.people(href='/people/{{user.guid}}')
+               img.ui.avatar.image(src="{{user.profile.avatar.large}}")
+               |@{{ user.name }}
+           .meta
+             span  {{ user.diaspora_id }}
+         .column
+           h1 {{ user.stream.count }}  Posts
+     .content
+        {% for tag in user.profile.tags %}
+        a.tag(href='/tag/{{tag}}') {{tag}}
+        {% endfor %}
+        .ui.divider
+        {% for tag in user.stream.tags %}
+        a.tag(href='/tag/{{tag}}') {{tag}}
+        {% endfor %}
+
+   {% endif %}
+   
+   {% if people %}
+   {% for user in people %}
+   
+   .ui.people.card
+      .content
+       .ui.two.column.grid
+         .column
+           .header
+             a.people(href='/people/{{user.guid}}')
+               img.ui.avatar.image(src="{{user.avatar}}")
+               |{{ user.name }}
+           .meta
+             span {{ user.diaspora_id }}
+         .column
+           h1 {{ user.stream_count }}  Posts
+      .content
+        {% for tag in user.tags %}
+        a.tag(href='/tag/{{tag}}') {{tag}}
+        {% endfor %}
+
+   {% endfor %}
+   {% endif %}
+   
+
+
+   {% if tag %}
+   h3
+      a.tag(href="/fetch/tag/{{tag}}") {{tag}} ({{count}})
+        
+   {% endif %}
+
+
+    
+   {% if tags %}
+   .ui.card
+     .content
+       {% for tag, score in tags %}
+       a.tag(href="/tag/{{tag}}") {{tag}}
+       {% endfor %}
+   {% endif %}
+
+
+   
+    
+   
+   {% if stream %}
+   .stream
+    
+     h3.ui.sub.header.next
+        {% if prev %}
+        a.ui.link(href="{{prev}}") previous
+        {% endif %}
+        {% if next %}
+        a.ui.link(href="/{{next}}") next
+        {% endif %}
+        span [{{start}} {{start+size}}]
+   
+     {% for post in stream %}
+     
+     .ui.card
+         .content
+            a.people(href='/people/{{post.author}}')
+              img.ui.avatar.image(src="{{post.author_image}}")
+              |{{ post.author_name }}
+
+            .right.floated.meta
+              a(href='/post/{{post.guid}}')
+                i.external.icon
+              | {{post.created_at}}
+
+         .content.post
+              
+            .text {{ post.md|markdown }}
+            //-
+                .ui.divider
+                .text {{ post.text }}
+                .ui.divider
+                .text {{ post.md }}
+
+         .content
+            
+            {% for tag in post.tags %}
+            a.tag(href='/tag/{{tag}}') {{tag}}
+            {% endfor %}
+
+     {% endfor %}
+   .ui.hidden.divider
+   {% endif %}
+
+    
+   {% if graph %}
+   .graph
+     include graph.html
+   {% endif %}
+
+
+
+   
