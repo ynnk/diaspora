@@ -207,7 +207,7 @@ def render_csv_stream(stream, **kwargs):
 @app.route("/fetch", methods=['GET', 'POST'])
 def fetch():
     gid = 'diaspora'
-    stream = diasp.get_stream(fetch=False)
+    stream = diasp.get_stream(fetch=True)
 
     def f(e):
          d = int(e['created_at'].replace("-", "")[:8])
