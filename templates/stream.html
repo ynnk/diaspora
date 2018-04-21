@@ -447,7 +447,7 @@
     
       
       ready() {
-        this.toggle();
+        var gapp = this;  
         document.querySelector('padagraph-model-popup').hidden = true;
         
         var _window_resized = function(){
@@ -473,6 +473,7 @@
         window.onresize = _window_resized;
     
         document.querySelector('padagraph-gviz-json').addEventListener('engines-complete', function (e) {
+            gapp.toggle();
     
             console.log(e.detail.app); // true
             var app = e.detail.app;

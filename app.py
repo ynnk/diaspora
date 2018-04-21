@@ -210,8 +210,9 @@ def fetch():
     stream = diasp.get_stream(fetch=True)
 
     def f(e):
-         d = int(e['created_at'].replace("-", "")[:8])
-         return d > 20180418
+         return True   
+         #d = int(e['created_at'].replace("-", "")[:8])
+         #return d > 20180418
     stream = [ e for e in stream if f(e) ]
     graph = stream_to_graph(stream, "diaspora", host=ENGINES_HOST)
     graphdb.graphs[gid] = graph
