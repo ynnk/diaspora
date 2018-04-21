@@ -14,7 +14,7 @@ install:
 	node -v
 	@echo " ------------------------------\n"
 
-	virtualenv diasp3
+	virtualenv --python=python3 diasp3
 	diasp3/bin/pip install -r requirements.txt
 
 
