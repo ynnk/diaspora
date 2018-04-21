@@ -275,7 +275,6 @@ dom-module(id='graph-app')
       
       ready() {
         var gapp = this;  
-        document.querySelector('padagraph-model-popup').hidden = true;
         
         var _window_resized = function(){
             var e = document.getElementById('gviz');
@@ -301,6 +300,7 @@ dom-module(id='graph-app')
 
         document.querySelector('padagraph-gviz-json').addEventListener('engines-complete', function (e) {
             gapp.toggle();
+            document.querySelector('padagraph-model-popup').hidden = true;
 
             console.log(e.detail.app); // true
             var app = e.detail.app;
